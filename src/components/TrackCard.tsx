@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React from "react";
 import { Track } from "../types";
 
-type TrackCardProps = {
+export type TrackCardProps = {
   track: Track;
 };
 

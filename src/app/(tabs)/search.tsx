@@ -5,9 +5,15 @@ import { Text, View } from "../../components/Themed";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
+import { FlatList } from "react-native-gesture-handler";
+import { tracks } from "../../../assets/data/tracks";
+import TrackCard from "../../components/TrackCard";
 
 export default function SearchScreen() {
   const [search, setSearch] = useState("");
+  const renderTrack = ({ item }: any) => {
+    return <TrackCard track={item} />;
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
@@ -18,8 +24,9 @@ export default function SearchScreen() {
           placeholder="Search..."
           style={styles.searchInput}
         />
-        <Text>Cancel</Text>
+        <Text onPress={() => setSearch("")}>Cancel</Text>
       </View>
+      <FlatList data={tracks} renderItem={renderTrack} />
     </SafeAreaView>
   );
 }
