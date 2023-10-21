@@ -1,17 +1,45 @@
 import { View, Text, Pressable, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TrackCardProps } from "./TrackCard";
 import { tracks } from "../../assets/data/tracks";
 import { Ionicons } from "@expo/vector-icons";
 import { usePlayerContext } from "../provider/PlayerProvider";
+import { Sound } from "expo-av/build/Audio";
+import { Audio } from "expo-av";
 
 const PlayerCard = () => {
+  const [sound, setSound] = useState<Sound>();
+
   const { track } = usePlayerContext();
+
+  useEffect(() => {
+    console.log("track", track);
+    playTrack();
+  }, [track]);
+
+  const playTrack = async () => {
+    if (sound) {
+      await sound.unloadAsync();
+    }
+    if (track?.preview_url) {
+      const { sound: newSound } = await Audio.Sound.createAsync({
+        uri: track?.preview_url,
+      });
+      setSound(newSound);
+      await newSound.playAsync();
+    }
+  };
+
+  const handlePause = async () => {
+    if (sound) {
+      await sound.unloadAsync();
+      setSound(undefined);
+    }
+  };
 
   if (!track) {
     return null;
   }
-
   const image = track?.album?.images?.[0];
   return (
     <View style={styles.container}>
@@ -29,12 +57,25 @@ const PlayerCard = () => {
           color={"white"}
           style={{ marginHorizontal: 10 }}
         />
-        <Ionicons
-          disabled={!track?.preview_url}
-          name={"play"}
-          size={22}
-          color={track?.preview_url ? "white" : "gray"}
-        />
+        {sound && track?.preview_url ? (
+          <Pressable onPress={handlePause}>
+            <Ionicons
+              disabled={!track?.preview_url}
+              name={"pause"}
+              size={22}
+              color={track?.preview_url ? "white" : "gray"}
+            />
+          </Pressable>
+        ) : (
+          <Pressable onPress={playTrack}>
+            <Ionicons
+              disabled={!track?.preview_url}
+              name={"play"}
+              size={22}
+              color={track?.preview_url ? "white" : "gray"}
+            />
+          </Pressable>
+        )}
       </View>
     </View>
   );
