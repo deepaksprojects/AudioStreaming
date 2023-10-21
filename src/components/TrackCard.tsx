@@ -1,16 +1,18 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import React from "react";
 import { Track } from "../types";
+import { usePlayerContext } from "../provider/PlayerProvider";
 
 export type TrackCardProps = {
   track: Track;
 };
 
 const TrackCard = ({ track }: TrackCardProps) => {
+  const { setTrack } = usePlayerContext();
   const image = track?.album?.images?.[0];
 
   const handleCardPress = () => {
-    console.log("first");
+    setTrack(track);
   };
   return (
     <Pressable style={styles.trackCardContainer} onPress={handleCardPress}>

@@ -3,17 +3,16 @@ import React from "react";
 import { TrackCardProps } from "./TrackCard";
 import { tracks } from "../../assets/data/tracks";
 import { Ionicons } from "@expo/vector-icons";
-const track = tracks[0];
+import { usePlayerContext } from "../provider/PlayerProvider";
+
 const PlayerCard = () => {
+  const { track } = usePlayerContext();
+
   if (!track) {
     return null;
   }
 
   const image = track?.album?.images?.[0];
-
-  const handleCardPress = () => {
-    console.log("first");
-  };
   return (
     <View style={styles.container}>
       <View style={styles.player}>
